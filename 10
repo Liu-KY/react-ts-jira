@@ -1,0 +1,13 @@
+yarn add v1.22.19
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved 1 new dependency.
+info Direct dependencies
+└─ lint-staged@13.0.3
+info All dependencies
+└─ lint-staged@13.0.3
+$ husky install
+husky - Git hooks installed
+Done in 8.50s.
