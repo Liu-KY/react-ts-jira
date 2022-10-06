@@ -18,8 +18,10 @@ const AuthContext = React.createContext<
     }
   | undefined
 >(undefined);
+
 AuthContext.displayName = "AuthContext";
 
+//获取token
 const bootstrapUser = async () => {
   let user = null;
   const token = auth.getToken();
@@ -31,6 +33,7 @@ const bootstrapUser = async () => {
   return user;
 };
 
+// 设置供应商
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
@@ -50,6 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// 消费者提取
 export const useAuth = () => {
   const context = React.useContext(AuthContext);
   if (!context) {

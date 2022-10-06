@@ -5,11 +5,13 @@ const localStorageKey = "__auth_provider_token__";
 
 export const getToken = () => window.localStorage.getItem(localStorageKey);
 
+//设置缓存token
 export const handleUserResponse = ({ user }: { user: User }) => {
   window.localStorage.setItem(localStorageKey, user.token || "");
   return user;
 };
 
+//登录
 export const login = (data: { username: string; password: string }) => {
   return fetch(`${apiUrl}/login`, {
     method: "POST",
@@ -42,5 +44,7 @@ export const register = (data: { username: string; password: string }) => {
   });
 };
 
-export const logout = async () =>
+export const logout = async () => {
   window.localStorage.removeItem(localStorageKey);
+  window.location.reload();
+};
