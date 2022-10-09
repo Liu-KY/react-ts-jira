@@ -1,47 +1,36 @@
-import { useState, useEffect } from "react";
-import qs from "qs";
+import { useState } from "react";
 
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
-import { cleanObject, useMount, useDebounce } from "utils/index";
-import { useHttp } from "utils/http";
-
-const apiUrl = process.env.REACT_APP_API_URL;
+import { useDebounce } from "utils/index";
+import styled from "@emotion/styled";
+import { Typography } from "antd";
+import { useProject } from "utils/project";
+import { useUsers } from "utils/users";
 
 export const ProjectListScreen = () => {
-  const [users, setUsers] = useState([]);
+  //名字或者项目ID
   const [param, setParam] = useState({
     name: "",
     personId: "",
   });
-  const [list, setList] = useState([]);
+
   const debouncedParam = useDebounce(param, 500);
-  const client = useHttp();
-
-  useMount(() => {
-    client("users").then(setUsers);
-    // fetch(`${apiUrl}/users`).then(async (res) => {
-    //   if (res.ok) {
-    //     setUsers(await res.json());
-    //   }
-    // });
-  });
-
-  useEffect(() => {
-    client("projects", { data: cleanObject(debouncedParam) }).then(setList);
-    // fetch(
-    //   `${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`
-    // ).then(async (res) => {
-    //   if (res.ok) {
-    //     setList(await res.json());
-    //   }
-    // });
-  }, [debouncedParam]);
+  const { isLoading, error, data: list } = useProject(debouncedParam);
+  const { data: users } = useUsers();
 
   return (
-    <div>
-      <SearchPanel param={param} users={users} setParam={setParam} />
-      <List list={list} users={users} />
-    </div>
+    <Container>
+      <h1>项目列表</h1>
+      <SearchPanel param={param} users={users || []} setParam={setParam} />
+      {error ? (
+        <Typography.Text type="danger">{error.message}</Typography.Text>
+      ) : null}
+      <List dataSource={list || []} users={users || []} loading={isLoading} />
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 3.2rem;
+`;

@@ -39,12 +39,11 @@ export const http = async (
     }
     //数据的JSON格式
     const data = await res.json();
-
     //成功与否
     if (res.ok) {
       return data;
     } else {
-      Promise.reject(data);
+      return Promise.reject(data);
     }
   });
 };
