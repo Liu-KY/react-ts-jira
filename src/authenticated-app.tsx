@@ -1,13 +1,14 @@
 import { useAuth } from "context/auth-context";
 import { ProjectListScreen } from "screens/project-list";
-import AntdTableTest from "screens/TeabTest";
 import styled from "@emotion/styled";
 import { Row } from "components/Lib";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 import { Dropdown, Menu } from "antd";
+import { useTitle } from "utils";
 
 export const AuthenticatedApp = () => {
   const { logout, user } = useAuth();
+  useTitle("主页");
 
   return (
     <Container>
@@ -33,7 +34,6 @@ export const AuthenticatedApp = () => {
       <Main>
         <ProjectListScreen />
       </Main>
-      <Footer>footer</Footer>
     </Container>
   );
 };
@@ -60,7 +60,4 @@ const HeaderRight = styled.div``;
 
 const Main = styled.main`
   grid-area: main;
-`;
-const Footer = styled.footer`
-  grid-area: footer;
 `;

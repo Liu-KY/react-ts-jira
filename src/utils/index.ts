@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const isFalsy = (value: unknown) => {
   return value === 0 ? false : !value;
 };
 
+//判断是否为null
 export const isVoid = (value: unknown) =>
   value === undefined || value === null || value === "";
 
@@ -20,12 +21,14 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
   return res;
 };
 
+//执行一次
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
   }, []);
 };
 
+//防抖hooks
 export const useDebounce = <T>(value: T, time?: number) => {
   const [newValue, setValue] = useState(value);
 
@@ -35,4 +38,16 @@ export const useDebounce = <T>(value: T, time?: number) => {
   }, [value, time]);
 
   return newValue;
+};
+
+export const useTitle = (newTitle: string, config: boolean = true) => {
+  const title = useRef<string>(document.title).current;
+
+  useEffect(() => {
+    document.title = newTitle;
+
+    return () => {
+      if (!config) document.title = title;
+    };
+  }, [newTitle, config]);
 };

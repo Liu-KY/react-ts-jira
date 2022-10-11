@@ -1,4 +1,4 @@
-import { Button, Card } from "antd";
+import { Button, Card, Typography } from "antd";
 import { useState } from "react";
 import { LoginScreen } from "./login";
 import { RegisterScreen } from "./register";
@@ -6,10 +6,12 @@ import styled from "@emotion/styled";
 import logo from "assets/logo.svg";
 import left from "assets/left.svg";
 import right from "assets/right.svg";
+import { useTitle } from "utils";
 
 export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
-
+  const [error, setError] = useState<Error | null>(null);
+  useTitle("Jira管理系统");
   return (
     //外层盒子
     <Container>
@@ -20,7 +22,18 @@ export const UnauthenticatedApp = () => {
       {/* 卡片 */}
       <ShadowCard>
         <Title>{isRegister ? "请注册" : "请登录"}</Title>
-        {isRegister ? <RegisterScreen /> : <LoginScreen />}
+
+        {error ? (
+          <Typography.Text type="danger">{error.message}</Typography.Text>
+        ) : (
+          ""
+        )}
+
+        {isRegister ? (
+          <RegisterScreen onError={setError} />
+        ) : (
+          <LoginScreen onError={setError} />
+        )}
         <Button onClick={() => setIsRegister(!isRegister)}>
           切换到{isRegister ? "登录" : "注册"}
         </Button>

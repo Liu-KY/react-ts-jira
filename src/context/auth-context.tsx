@@ -3,6 +3,8 @@ import * as auth from "auth-provider";
 import { User } from "screens/project-list/list";
 import { http } from "utils/http";
 import { useMount } from "utils";
+import { useAsync } from "utils/useAsync";
+import { FullPageError, FullPageLoading } from "components/Lib";
 
 interface AuthForm {
   username: string;
@@ -35,15 +37,32 @@ const bootstrapUser = async () => {
 
 // 设置供应商
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+  const {
+    data: user,
+    error,
+    isError,
+    isLoading,
+    isIdle,
+    setData: setUser,
+    run,
+  } = useAsync<User | null>();
 
   const login = (from: AuthForm) => auth.login(from).then(setUser);
   const register = (from: AuthForm) => auth.register(from).then(setUser);
   const logout = () => auth.logout().then(() => setUser(user));
 
   useMount(() => {
-    bootstrapUser().then(setUser);
+    run(bootstrapUser());
   });
+
+  if (isIdle || isLoading) {
+    return <FullPageLoading />;
+  }
+
+  if (isError) {
+    return <FullPageError error={error} />;
+  }
 
   return (
     <AuthContext.Provider

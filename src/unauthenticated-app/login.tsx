@@ -1,14 +1,23 @@
 import { useAuth } from "context/auth-context";
-import { FormEvent } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input } from "antd";
 import { LongButton } from "unauthenticated-app";
+import { useAsync } from "utils/useAsync";
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ onError }: { onError: (e: Error) => void }) => {
   //自定义上下文HOOKS
   const { login } = useAuth();
+  const { run, isLoading } = useAsync(undefined, { catch: true });
+
   //登录方法
-  const handleSubmit = (values: { username: string; password: string }) => {
-    login(values);
+  const handleSubmit = async (values: {
+    username: string;
+    password: string;
+  }) => {
+    try {
+      await run(login(values));
+    } catch (e) {
+      onError(e as Error);
+    }
   };
 
   return (
@@ -33,7 +42,7 @@ export const LoginScreen = () => {
       </Form.Item>
 
       <Form.Item>
-        <LongButton type={"primary"} htmlType={"submit"}>
+        <LongButton type={"primary"} htmlType={"submit"} loading={isLoading}>
           登录
         </LongButton>
       </Form.Item>
