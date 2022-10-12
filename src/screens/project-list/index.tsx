@@ -7,16 +7,21 @@ import styled from "@emotion/styled";
 import { Typography } from "antd";
 import { useProject } from "utils/project";
 import { useUsers } from "utils/users";
+import { useUrlQueryParam } from "utils/url";
 
 export const ProjectListScreen = () => {
   //名字或者项目ID
-  const [param, setParam] = useState({
-    name: "",
-    personId: "",
-  });
+  // const [, setParam] = useState({
+  //   name: "",
+  //   personId: "",
+  // });
 
+  //对象会无限创建需要使用useMemo解决
+  const [param, setParam] = useUrlQueryParam(["name", "personId"]);
   const debouncedParam = useDebounce(param, 500);
+
   const { isLoading, error, data: list } = useProject(debouncedParam);
+
   const { data: users } = useUsers();
 
   return (
