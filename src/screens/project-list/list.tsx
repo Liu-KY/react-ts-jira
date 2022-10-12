@@ -4,18 +4,25 @@ import { Link } from "react-router-dom";
 
 export interface User {
   created: number;
-  id: string;
+  id: number;
   name: string;
   organization: string;
-  personId: string;
+  personId: number;
   token: string;
 }
 
-interface ListProps extends TableProps<User> {
-  users: {
-    id: string;
-    name: string;
-  }[];
+export interface Project {
+  key: number;
+  id: number;
+  name: string;
+  personId: number;
+  pin: boolean;
+  organization: string;
+  created: number;
+}
+
+interface ListProps extends TableProps<Project> {
+  users: User[];
 }
 
 export const List = ({ users, ...props }: ListProps) => {
@@ -40,7 +47,7 @@ export const List = ({ users, ...props }: ListProps) => {
           render(value, project) {
             return (
               <span>
-                {users.find((user) => user.id === project.personId)?.name ||
+                {users.find((user) => user.id == project.personId)?.name ||
                   "未知"}
               </span>
             );

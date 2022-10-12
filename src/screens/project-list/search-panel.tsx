@@ -1,20 +1,17 @@
 /* @jsxImportSource @emotion/react */
 // import { jsx } from '@emotion/react'
 import { Form, Input, Select } from "antd";
+import { UseSelect } from "components/userSelect";
+import { User } from "./list";
 
 interface ListProps {
-  param: {
-    name: string;
-    personId: string;
-  };
-  users: {
-    id: string;
-    name: string;
-  }[];
+  param: Partial<Pick<User, "name" | "personId">>;
+  users: User[];
   setParam: (param: ListProps["param"]) => void;
 }
 
 export const SearchPanel = ({ param, users, setParam }: ListProps) => {
+  // console.log(param, users)
   return (
     <Form layout="inline" css={{ marginBottom: "2rem" }}>
       <Form.Item>
@@ -32,7 +29,19 @@ export const SearchPanel = ({ param, users, setParam }: ListProps) => {
       </Form.Item>
 
       <Form.Item>
-        <Select
+        <UseSelect
+          value={param.personId}
+          onChange={(value) => {
+            console.log(value);
+            setParam({
+              ...param,
+              personId: value,
+            });
+          }}
+          defaultOptionName={"负责人"}
+        />
+
+        {/* <Select
           value={param.personId}
           onChange={(value) =>
             setParam({
@@ -47,7 +56,7 @@ export const SearchPanel = ({ param, users, setParam }: ListProps) => {
               {user.name}
             </Select.Option>
           ))}
-        </Select>
+        </Select> */}
       </Form.Item>
     </Form>
   );

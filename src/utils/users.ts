@@ -2,11 +2,7 @@ import { cleanObject } from "utils";
 import { useHttp } from "./http";
 import { useAsync } from "./useAsync";
 import { useEffect } from "react";
-
-export interface User {
-  id: string;
-  name: string;
-}
+import { User } from "screens/project-list/list";
 
 export const useUsers = (params?: Partial<User>) => {
   const client = useHttp();
