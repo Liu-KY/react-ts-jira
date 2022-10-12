@@ -51,3 +51,5 @@ export const useTitle = (newTitle: string, config: boolean = true) => {
     };
   }, [newTitle, config]);
 };
+
+export const resetRoute = () => (window.location.href = window.location.origin);
