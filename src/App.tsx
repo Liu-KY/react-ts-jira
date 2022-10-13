@@ -10,8 +10,6 @@ function App() {
   return (
     <div className="App">
       <ErrorBoundary fallbackRender={FullPageError}>
-        {/* <ProjectListScreen />
-      <LoginScreen /> */}
         {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
       </ErrorBoundary>
     </div>
