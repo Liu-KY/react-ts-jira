@@ -40,6 +40,7 @@ export const useDebounce = <T>(value: T, time?: number) => {
   return newValue;
 };
 
+//设置标题
 export const useTitle = (newTitle: string, config: boolean = true) => {
   const title = useRef<string>(document.title).current;
 

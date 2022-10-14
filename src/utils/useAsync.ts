@@ -19,6 +19,7 @@ export const useAsync = <D>(
   initialState?: State<D>,
   initialConfig?: typeof defaultConfig
 ) => {
+  const [retry, setRetry] = useState(() => () => {});
   const [state, setState] = useState({
     ...dafaultInitialState,
     ...initialState,
@@ -43,11 +44,22 @@ export const useAsync = <D>(
       stat: "error",
     });
 
-  const run = (promise: Promise<D>) => {
+  const run = (
+    promise: Promise<D>,
+    runConfig?: { retry: () => Promise<D> }
+  ) => {
     if (!promise || !promise.then) {
       throw new Error("请传入promise对象");
     }
+    //设置刷新
+    setRetry(() => () => {
+      if (runConfig) {
+        run(runConfig?.retry(), runConfig);
+      }
+    });
+
     setState({ ...state, stat: "loading" });
+
     return promise
       .then((data) => {
         setData(data);
@@ -70,5 +82,6 @@ export const useAsync = <D>(
     setData,
     setError,
     ...state,
+    retry,
   };
 };

@@ -10,7 +10,12 @@ import { useProjectsSearchParams } from "./util";
 export const ProjectListScreen = () => {
   //对象会无限创建需要使用useMemo解决
   const [param, setParam] = useProjectsSearchParams();
-  const { isLoading, error, data: list } = useProject(useDebounce(param, 500));
+  const {
+    isLoading,
+    error,
+    data: list,
+    retry,
+  } = useProject(useDebounce(param, 500));
   const { data: users } = useUsers();
 
   return (
@@ -23,7 +28,12 @@ export const ProjectListScreen = () => {
         <Typography.Text type="danger">{error.message}</Typography.Text>
       ) : null}
 
-      <List dataSource={list || []} users={users || []} loading={isLoading} />
+      <List
+        dataSource={list || []}
+        users={users || []}
+        loading={isLoading}
+        refresh={retry}
+      />
     </Container>
   );
 };

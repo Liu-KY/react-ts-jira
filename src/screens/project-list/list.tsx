@@ -1,6 +1,8 @@
 import { Table, TableProps } from "antd";
+import { Pin } from "components/Pin";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { useEditProject } from "utils/project";
 
 export interface User {
   created: number;
@@ -23,13 +25,30 @@ export interface Project {
 
 interface ListProps extends TableProps<Project> {
   users: User[];
+  refresh: () => void;
 }
 
-export const List = ({ users, ...props }: ListProps) => {
+export const List = ({ users, refresh, ...props }: ListProps) => {
+  const { mutate } = useEditProject();
+
   return (
     <Table
       pagination={false}
       columns={[
+        {
+          title: <Pin choose />,
+          dataIndex: "pin",
+          render(value, project) {
+            return (
+              <Pin
+                choose={value}
+                onChange={(pin) =>
+                  mutate({ id: project.id, pin: !!pin }).then(refresh)
+                }
+              />
+            );
+          },
+        },
         {
           title: "名称",
           dataIndex: "name",
